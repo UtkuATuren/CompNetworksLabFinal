@@ -1,0 +1,58 @@
+
+- user/admin login js
+
+- petition/complaint/suggestion free text page
+
+- elective course petition(exam excuse) page
+
+- sign up/forgot pages
+
+- see more kaldırılacak, lateral transfer??
+
+- see older(admin page)(date)
+
+- date çekilip içerik üstüne gömülecek(ultra mega basit)
+____________________________
+
+- bütün beyaz olan kısımlar db'den çekilecek
+
+- js ile dinamik olarak güncellenecek
+
+- create new/see more kısmına ihtiyaç olmayacak
+
+- 
+
+-----------------------------------
+27.05.24
+
+Exam excuse db write logic
+
+url injection çözülecek
+
+
+<?php
+include("connection.php");
+
+$content = $_POST['content'];
+$type = $_POST['type'];
+$userId = $_SESSION['user_id'];
+$date = date(d.m.Y);
+
+//Username / senderName
+$query = "SELECT name FROM students WHERE id = $userId";
+$result = mysqli_query($con, $query);
+$row = mysqli_fetch_assoc($result);
+$senderName = $row['name'];
+
+//senderId , senderName , date , type , content
+
+
+ 
+$sqlquery = "INSERT INTO messages VALUES ($userId,$senderName, $date, $type, $content)"
+ 
+if ($conn->query($sql) === TRUE) {
+    echo "record inserted successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+} 
+
