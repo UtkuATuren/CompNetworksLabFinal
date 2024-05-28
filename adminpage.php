@@ -69,6 +69,7 @@ $offset = ($page - 1) * $records_per_page;
                                                 <th>From</th>
                                                 <th>Name</th>
                                                 <th>Status</th>
+                                                <th>Last Update</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -90,10 +91,11 @@ $offset = ($page - 1) * $records_per_page;
                                                 echo "<td>" . $row["senderId"] . "</td>";
                                                 echo "<td>" . $row["senderName"] . "</td>";
                                                 echo "<td>" . $row["status"] . "</td>";
+                                                echo "<td>" . $updateDate . "</td>";
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='5'>0 results</td></tr>";
+                                            echo "<tr><td colspan='6'>0 results</td></tr>";
                                         }
                                         ?>
                                         </tbody>

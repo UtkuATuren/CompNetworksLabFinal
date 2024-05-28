@@ -122,13 +122,13 @@ $result = $stmt->get_result();
                                                     echo "<td>" . htmlspecialchars($row["messageId"]) . "</td>";
                                                     echo "<td>" . $date . "</td>";
                                                     echo "<td>" . $row["status"] . "</td>";
-                                                    echo "<td>" . htmlspecialchars($row["type"]) . "</td>";
                                                     echo "<td>" . $updateDate . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row["type"]) . "</td>";
                                                     echo "</tr>";
                                                 }
                                                 
                                             } else {
-                                                echo "<tr><td colspan='4'>0 results</td></tr>";
+                                                echo "<tr><td colspan='5'>0 results</td></tr>";
                                             }
                                             ?>
                                         </tbody>
