@@ -3,6 +3,10 @@
 session_start();
 
 include('connection.php');
+include('checkuser.php');
+
+//check for user login
+checkUser();
 
 if (isset($_GET['messageId'])) {
     $messageId = mysqli_real_escape_string($con, $_GET['messageId']);
@@ -20,7 +24,7 @@ $qry = "SELECT isAdmin FROM students WHERE Id = $currentId";
 $res = mysqli_query($con,$qry);
 $resArr = $res->fetch_assoc();
 $isAdmin = $resArr['isAdmin'];
-$returnDestination = $isAdmin ==1 ? 'adminpage.php' : 'userpage.php';
+$returnDestination = $isAdmin == 1 ? 'adminpage.php' : 'userpage.php';
 
 ?>
 
@@ -63,13 +67,9 @@ $returnDestination = $isAdmin ==1 ? 'adminpage.php' : 'userpage.php';
                     <!--TOP-->
                     <div class="row-md-2 info-container p-3">
                         <div class="container-fluid">
-                            <div class="row mx-auto mt-3">
+                            <div class="row mx-auto">
                                 <div class="col-md-3 mx-auto">
                                 <p style="color: black; font-weight: 700;">
-                                <?php 
-                                
-                                ?>
-                                <br>
                                 <?php
                                 $userId = $message['senderId'];
                                 $userName = $message['senderName'];
@@ -77,13 +77,16 @@ $returnDestination = $isAdmin ==1 ? 'adminpage.php' : 'userpage.php';
                                 echo "<p style='color:black; font-weight: 700; white-space:nowrap;'>Student Name: $userName </br> Student Id: $userId </br> Type: $type </p>";
                             ?>
                             </div>
+                            <!--Boşluk-->
                                 <div class="col-md-6"></div>
-                                <div class="col-md-3 mx-auto">
+                                <div class="col-md-3 mt-3 mx-auto">
                                 <p style="float: right; color: black; font-weight: 700;">
-                                    Date:<?php 
+                                    Date: <?php 
                                     $date = $message['date'];
-                                    echo "$date";
+                                    $formattedDate = date("d/m/Y H.i", strtotime($date));
+                                    echo "$formattedDate";
                                     ?> 
+                                    
                                 </div> 
                             </div>
                         </div>
@@ -112,19 +115,31 @@ $returnDestination = $isAdmin ==1 ? 'adminpage.php' : 'userpage.php';
                         <form action='respondMessage.php' method='post'>
                             <label for='response'>Describe your update:</label>
                             <textarea rows='3' name='statusDesc' id='statusDesc'></textarea>
-                            <button type='submit' name='action' value='approved' class='btn btn-success mt-2'>
+                            <button type='submit' name='action' value='Approved' class='btn btn-success mt-2'>
                                 <i class='fa-solid fa-check'></i> | Accept
                             </button>
-                            <button type='submit' name='action' value='rejected' class='btn btn-danger mt-2 mx-3'>
+                            <button type='submit' name='action' value='Rejected' class='btn btn-danger mt-2 mx-3'>
                                 <i class='fa-solid fa-xmark'></i> | Reject
                             </button>
-                            <button type='submit' name='action' value='forwarded' class='btn btn-primary mt-2'>
+                            <button type='submit' name='action' value='Forwarded' class='btn btn-primary mt-2'>
                                 <i class='fa-solid fa-share'></i> | Forward
                             </button>
                             <input type='hidden' value='$messageId' name='messageId' id='messageId'>
                         </form>
                     </div>";
                     }?>
+                    <div class='row-md-6 mt-5 mb-5 info-container p-3'>
+                        <?php
+                            echo "<b> Status: </b> <p> ${message['status']} </p>";
+                            if($message['statusDesc']){
+                            $lastUpdate = htmlspecialchars($message["lastUpdate"]);
+                            $parsedUpdateDate = date("d/m/Y H.i", strtotime($lastUpdate));
+
+                            echo "<div style='float:right'> <b> Last Update: </b> <p>$parsedUpdateDate</p> </div>";
+                            echo "<b> Status Description: </b> <p> ${message['statusDesc']}</p>";
+                            }?>
+                    </div>
+
 
                     <!--BOTTOM-->
                     <div class="container info-container mb-3 p-3 text-center">
@@ -237,11 +252,7 @@ $returnDestination = $isAdmin ==1 ? 'adminpage.php' : 'userpage.php';
                                     ?>
                                 </div>
                                 
-                                <button type="submit" class="btn green-button"
-                                            style="float: right; width: 60%;">
-                                            <p style="margin:auto; color: white; font-weight: 600; font-size: larger;">Edit
-                                            <i class="fa-regular fa-pen-to-square"></i></p>
-                                        </button>
+                              
                         </div>
                     </div>
                     </div>

@@ -4,8 +4,9 @@ session_start();
 
 // Include your connection file
 include('connection.php');
+include('checkuser.php');
+checkUser();
 
-// Your other PHP code and HTML content go here
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,29 +45,29 @@ include('connection.php');
                 <div class="container p-0">
                     <!--TOP-->
                     <div class="row-md-2 info-container p-3">
-                        <div class="container-fluid">
-                            <div class="row mx-auto mt-3">
+                        <div class="container">
+                            <div class="row mt-3 mx-auto">
                                 <div class="col-md-3 mx-auto">
-                                <p style="color: black; font-weight: 700;">Type: Complaint<br>
-                                <?php
-                                include('connection.php');
+                                <p style="color: black; font-weight: 700;">Type: Complaint
+                                    <?php
+                                        include('connection.php');
 
-                                $userId = $_SESSION['user_id'];
+                                        $userId = $_SESSION['user_id'];
 
-                                $query = "SELECT name,id FROM students WHERE id = $userId";
-                                $result = mysqli_query($con, $query);
-                                $row = mysqli_fetch_assoc($result);
-                                $name = $row['name'];
-                                $id = $row['id'];
+                                        $query = "SELECT name,id FROM students WHERE id = $userId";
+                                        $result = mysqli_query($con, $query);
+                                        $row = mysqli_fetch_assoc($result);
+                                        $name = $row['name'];
+                                        $id = $row['id'];
 
-                                echo "<p style='color:black; font-weight: 700'>Student Name: $name</p><p style='color: black; font-weight: 700'>Student ID: $id</p>";
-                            ?>
+                                        echo "<p style='color:black; font-weight: 700'>Student Name: $name</p><p style='color: black; font-weight: 700'>Student ID: $id</p>";
+                                    ?>
                             </div>
                                 <div class="col-md-6"></div>
                                 <div class="col-md-3 mx-auto" p-0>
                                 <p style="float: right; color: black; font-weight: 700;">
-                                    Date:<?php 
-                                    echo date("d.m.Y");
+                                    Date: <?php 
+                                    echo date("d/m/Y");
                                     ?> 
                                 </div> 
                             </div>
@@ -89,19 +90,18 @@ include('connection.php');
                     </div>
                     <!--BOTTOM-->
                     <div class="container info-container mb-3 p-3 text-center">
-                        <div class="btn-group d-flex justify-content-around " role="group" aria-label="Basic example">
-                            <button onclick="window.location.href = 'userpage.php';" type="button" class="btn btn-primary green-button align-items-center justify-content-center" style="border: #ffffff; width: 25%; border-radius: 10px; height: 5vh;" ><i style="margin-right: 3%; width: 24px; height: 24px ;" class="fa-solid fa-left-long"></i> Go back</button>
-                            <input type="file" class="form-control" id="inputGroupFile01" style="padding: 1%;padding-left: 9.3%; width: 40%; margin-left: 10%; margin-right: 10%; color: white;  background-color: #00421c;">
-
-                            
-                            <button type="submit" class="btn btn-primary green-button align-items-center justify-content-center" style="border: #ffffff; width: 25%; border-radius: 10px; height: 5vh">Send<i style="margin-left: 3%;" class="fa-solid fa-share"></i></button>
-                        </div>
+                    <div class="btn-group d-flex justify-content-around" role="group" aria-label="Basic example">
+                        <button onclick="window.location.href = 'userpage.php';" type="button" class="btn btn-primary green-button align-items-center justify-content-center mx-2" style="border: #ffffff; width: 25%; border-radius: 10px; height: 5vh;">
+                            <i style="margin-right: 3%; width: 24px; height: 24px;" class="fa-solid fa-left-long"></i> Go back
+                        </button>                            
+                        <button type="submit" class="btn btn-primary green-button align-items-center justify-content-center mx-2" style="border: #ffffff; width: 25%; border-radius: 10px; height: 5vh;">
+                            Send <i style="margin-left: 3%;" class="fa-solid fa-share"></i>
+                        </button>
+                    </div>
                     </div>
                     </form>
-                
                 </div>
             </div>
-            
             <!--RİGHT-->
             <div class="col-md-3 info-container p-0 mx-auto mb-3">
                 <!--1.4-->
@@ -205,19 +205,11 @@ include('connection.php');
                                         echo "<div class='container bg-light text-center p-2' style='height: 60%;'><p style='margin: auto;'>$semester</p></div>";
                                     ?>
                                 </div>
-                                
-                                <button type="submit" class="btn green-button"
-                                            style="float: right; width: 60%;">
-                                            <p style="margin:auto; color: black; font-weight: 600; font-size: larger;">Edit
-                                            <i class="fa-regular fa-pen-to-square"></i></p>
-                                        </button>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                </div>
-                
+                </div> 
             </div>
-            
         </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

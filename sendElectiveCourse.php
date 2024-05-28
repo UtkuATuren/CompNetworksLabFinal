@@ -12,7 +12,6 @@ $why = mysqli_real_escape_string($con, $_POST['why']);
 $new = mysqli_real_escape_string($con, $_POST['new']);
 $type = mysqli_real_escape_string($con, $_POST['type']);
 $userId = $_SESSION['user_id'];
-$date = date("Y-m-d"); // Correct date format for SQL
 
 // Get the username/senderName from the database
 $query = "SELECT name FROM students WHERE id = $userId";
@@ -23,7 +22,7 @@ $senderName = mysqli_real_escape_string($con, $row['name']);
 $content = "<br>Dersin kodu: " . $ex . "<br>Bırakılma nedeni: " . $why . "<br>Alınması istenen ders: " . $new;
 
 // Construct the SQL query to insert the data into the messages table
-$sqlquery = "INSERT INTO messages (senderId, senderName, date, type, content) VALUES ('$userId', '$senderName', '$date', '$type', '$content')";
+$sqlquery = "INSERT INTO messages (senderId, senderName, type, content) VALUES ('$userId', '$senderName', '$type', '$content')";
 
 // Execute the query and check for errors
 if ($con->query($sqlquery) === TRUE) {

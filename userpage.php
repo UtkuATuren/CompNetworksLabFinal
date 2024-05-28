@@ -4,12 +4,8 @@ session_start();
 
 // Include your connection file
 include('connection.php');
-
-// Check for login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: unauthorized.php"); // Redirect to the login page if not logged in
-    exit();
-}
+include('checkuser.php');
+checkUser();
 
 // Determine the current page
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -29,7 +25,7 @@ $count_row = $count_result->fetch_assoc();
 $total_pages = ceil($count_row['total'] / $records_per_page);
 
 // Fetch messages for the user with limit and offset
-$sql = "SELECT messageId, date, type, status FROM messages WHERE senderId = ? ORDER BY date DESC, messageId DESC LIMIT ?, ?";
+$sql = "SELECT messageId, date, type, status, lastUpdate FROM messages WHERE senderId = ? ORDER BY  lastUpdate DESC LIMIT ?, ?";
 $stmt = $con->prepare($sql);
 $stmt->bind_param("iii", $user_id, $offset, $records_per_page);
 $stmt->execute();
@@ -76,9 +72,6 @@ $result = $stmt->get_result();
                             <button onclick="window.location.href = 'complaint.php';" type="submit" class="btn white-button mb-4">
                                 <p style="margin: auto; color: black; font-weight: 600; font-size: larger;">Complaint</p>
                             </button>
-                            <button type="submit" class="btn white-button mb-4">
-                                <p style="margin: auto; color: black; font-weight: 600; font-size: larger;">Lateral Transfer</p>
-                            </button>
                             <button onclick="window.location.href = 'exam-excuse.php';" type="submit" class="btn white-button mb-4">
                                 <p style="margin: auto; color: black; font-weight: 600; font-size: larger;">Exam Excuse Petition</p>
                             </button>
@@ -88,22 +81,19 @@ $result = $stmt->get_result();
                             <button onclick="window.location.href = 'suggestion.php';" type="submit" class="btn white-button mb-4">
                                 <p style="margin: auto; color: black; font-weight: 600; font-size: larger;">Suggestion</p>
                             </button>
-                            <button type="submit" class="btn green-button mb-4">
-                                <p style="margin: auto; color: black; font-weight: 600; font-size: larger;">See More</p>
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <!--MIDDLE-->
-            <div class="col-md-5 p-0 ">
+            <div class="col-md-5 p-0">
                 <div class="container">
                     <!--TOP-->
                     <div class="row-md-2 info-container p-3 text-center">
                         <h2 style="color: black; font-weight: 600;">Recent Activity</h2>
                     </div>
                     <!--BOTTOM-->
-                    <div class="row-md-10 mt-5 mb-5 info-container p-3">
+                    <div class="row-md-10 mt-5 mb-5 info-container p-4">
                         <div class="row text-center text-black">
                             <div class="row" style="align-items: center; margin: auto;">
                                 <div class="table-responsive mt-3">
@@ -115,18 +105,28 @@ $result = $stmt->get_result();
                                                 <th>Date</th>
                                                 <th>Type</th>
                                                 <th>Status</th>
+                                                <th>Last Update</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             if ($result->num_rows > 0) {
                                                 while ($row = $result->fetch_assoc()) {
-                                                    echo "<tr onclick=\"location.href='viewmessage.php?messageId=" . htmlspecialchars($row["messageId"]) . "'\" style='cursor:pointer;'>";                                                    echo "<td>" . htmlspecialchars($row["messageId"]) . "</td>";
-                                                    echo "<td>" . htmlspecialchars($row["date"]) . "</td>";
+                                                    $lastUpdate = htmlspecialchars($row["lastUpdate"]);
+                                                    $sendingDate = htmlspecialchars($row['date']);
+                                                    $updateDate = date("d/m/Y H.i", strtotime($lastUpdate));
+                                                    $date = date("d/m/Y H.i",strtotime($sendingDate));
+
+                                                    echo "<tr onclick=\"location.href='viewmessage.php?messageId=" . htmlspecialchars($row["messageId"]) . "'\" style='cursor:pointer;'>";
+                                                    echo "<td>" . htmlspecialchars($row["messageId"]) . "</td>";
+                                                    echo "<td>" . $date . "</td>";
+                                                    echo "<td>" . $row["status"] . "</td>";
                                                     echo "<td>" . htmlspecialchars($row["type"]) . "</td>";
-                                                    echo "<td>" . htmlspecialchars($row["status"]) . "</td>";
+                                                    echo "<td>" . $updateDate . "</td>";
                                                     echo "</tr>";
                                                 }
+                                                
                                             } else {
                                                 echo "<tr><td colspan='4'>0 results</td></tr>";
                                             }
@@ -137,9 +137,9 @@ $result = $stmt->get_result();
                                         <?php
                                         for ($i = 1; $i <= $total_pages; $i++) {
                                             if ($i == $page) {
-                                                echo "<div class='green-button ml-5' style='float: right; border-radius: 25%; width: 30px; justify-content:center'><strong>$i</strong></div> ";
+                                                echo "<div class='green-button mx-1' style='color:white; border-radius: 25%; height:30px; width: 30px; justify-content:center; align-items:center'><strong>$i</strong></div> ";
                                             } else {
-                                                echo "<a class='green-button m-1' style='color:black; text-decoration:none; border-radius: 25%; width: 30px; justify-content:center' href='?page=$i'>$i</a>";
+                                                echo "<a class='green-button mx-1' style='color:white; text-decoration:none; border-radius: 25%; height:30px; width: 30px; justify-content:center; align-items:center' href='?page=$i'>$i</a>";
                                             }
                                         }
                                         ?>
@@ -168,7 +168,7 @@ $result = $stmt->get_result();
                     ?>
                 </div>
                 <!--1.2-->
-                <div class="row-md-2 text-center">
+                <div class="row-md-2 w-100 text-center">
                     <div>
                         <h2 style="color: black;">Student's</h2>
                     </div>
@@ -176,7 +176,7 @@ $result = $stmt->get_result();
                 </div>
                 <!--1.6-->
                 <div class="row-md-6">
-                    <div class="col text-center mx-5 px-5 py-2 text-black">
+                    <div class="col text-center px-5 py-2 text-black">
                         <div class="row" style="font-weight: bold;">Name</div>
                         <!--2.3 (Name)-->
                         <div class="row mb-3">
@@ -189,14 +189,14 @@ $result = $stmt->get_result();
                             $row = $result->fetch_assoc();
                             $name = $row['name'];
 
-                            echo "<div class='container bg-light p-2' style='height: 2%;'><p style='margin: auto;'>$name</p></div>";
+                            echo "<div class='uniform-container container bg-light p-2' style='height: 2%;'><p style='margin:auto;'>$name</p></div>";
                             ?>
                         </div>
                         <div class="row" style="font-weight: bold;">ID</div>
                         <!--2.3 (Id)-->
                         <div class="row mb-3">
                             <?php
-                            echo "<div class='container bg-light p-2' style='height: 2%;'><p style='margin: auto;'>$user_id</p></div>";
+                            echo "<div class='container bg-light p-2' style='height: 2%; min-width 200px;'><p style='margin: auto;'>$user_id</p></div>";
                             ?>
                         </div>
                         <div class="row" style="font-weight: bold;">E-mail</div>
@@ -248,7 +248,7 @@ $result = $stmt->get_result();
                             </div>
                             <form action="logout.php" method="post">
                                 <button type="submit" class="btn green-button mb-4" style="width: 60%;">
-                                    <p style="margin:auto; color: black; font-weight: 600; font-size: larger;">Log Out <i class="fa-regular fa-pen-to-square"></i></p>
+                                    <p style="margin:auto; color: white; font-weight: 600; font-size: larger;">Log Out</p>
                                 </button>
                             </form>
                         </div>

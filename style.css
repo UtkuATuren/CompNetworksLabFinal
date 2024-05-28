@@ -25,6 +25,17 @@
     background-color: #d9d9d9;
     border-radius: 5px;
 }
+.uniform-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: fit-content;
+    background-color: lightgrey;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px auto; /* Centering the div */
+}
+
 .white-button{
     display: flex;
     background-color: white;
@@ -126,6 +137,11 @@ td{
     background-color: #47bc4c;        
   }
 
-
-
-
+  .sexslave{
+    background-color: cadetblue;
+    color: red;
+    border-color: #eab676;
+    background: #ffff;
+    min-width: 200px;
+    padding: 2px;
+  }

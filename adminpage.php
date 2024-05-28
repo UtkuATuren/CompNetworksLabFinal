@@ -4,12 +4,10 @@ session_start();
 
 // Include your connection file
 include('connection.php');
+include('checkuser.php');
 
 // check for login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: unauthorized.php"); // Redirect to the login page if not logged in
-    exit();
-}
+checkUser();
 
 // Determine the current page
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -70,22 +68,28 @@ $offset = ($page - 1) * $records_per_page;
                                                 <th>Type</th>
                                                 <th>From</th>
                                                 <th>Name</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         <?php
                                         // Fetch messages with limit and offset
-                                        $sql = "SELECT messageId, date, type, senderId, senderName FROM messages ORDER BY date DESC,  messageId DESC LIMIT $offset, $records_per_page";
+                                        $sql = "SELECT messageId, date, type, senderId, senderName, status, lastUpdate FROM messages ORDER BY lastUpdate DESC LIMIT $offset, $records_per_page";
                                         $result = mysqli_query($con, $sql);
 
                                         if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
+                                                $lastUpdate = htmlspecialchars($row["lastUpdate"]);
+                                                $sendingDate = htmlspecialchars($row['date']);
+                                                $updateDate = date("d/m/Y H.i", strtotime($lastUpdate));
+                                                $date = date("d/m/Y H.i",strtotime($sendingDate));
                                                 echo "<tr onclick=\"location.href='viewmessage.php?messageId=" . htmlspecialchars($row["messageId"]) . "'\" style='cursor:pointer;'>";
                                                 echo "<td>" . $row["messageId"] . "</td>";
-                                                echo "<td>" . $row["date"] . "</td>";
+                                                echo "<td>" . $date . "</td>";
                                                 echo "<td>" . $row["type"] . "</td>";
                                                 echo "<td>" . $row["senderId"] . "</td>";
                                                 echo "<td>" . $row["senderName"] . "</td>";
+                                                echo "<td>" . $row["status"] . "</td>";
                                                 echo "</tr>";
                                             }
                                         } else {
@@ -104,9 +108,9 @@ $offset = ($page - 1) * $records_per_page;
 
                                         for ($i = 1; $i <= $total_pages; $i++) {
                                             if ($i == $page) {
-                                                echo "<div class='green-button m-auto' style='float: right; border-radius: 25%; width: 30px; justify-content:center'><strong>$i</strong></div> ";
+                                                echo "<div class='green-button mx-1' style='color:white; border-radius: 25%; width: 30px; justify-content:center'><strong>$i</strong></div> ";
                                             } else {
-                                                echo "<a class='green-button m-1' style='color:black; text-decoration:none; border-radius: 25%; width: 30px; justify-content:center' href='?page=$i'>$i</a>";
+                                                echo "<a class='green-button mx-1' style='color:white; text-decoration:none; border-radius: 25%; width: 30px; justify-content:center' href='?page=$i'>$i</a>";
                                             }
                                         }
                                         ?>
@@ -168,8 +172,7 @@ $offset = ($page - 1) * $records_per_page;
                         <div class="row mt-5">
                             <form action="logout.php" method="post">
                                 <button type="submit" class="btn green-button mb-4" style="width: 60%;">
-                                    <p style="margin:auto; color: black; font-weight: 600; font-size: larger;">Log Out
-                                    <i class="fa-regular fa-pen-to-square"></i></p>
+                                    <p style="margin:auto; color: white; font-weight: 600; font-size: larger;">Log Out
                                 </button>
                             </form>
                         </div>
