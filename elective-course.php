@@ -1,13 +1,9 @@
 <?php
-// Start the session at the very beginning of the file
 session_start();
 
-// Include your connection file
 include('connection.php');
 include('checkuser.php');
 checkUser();
-
-// Your other PHP code and HTML content go here
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,12 +60,6 @@ checkUser();
                                 echo "<p style='color:black; font-weight: 700'>Student Name: $name</p><p style='color: black; font-weight: 700'>Student ID: $id</p>";
                             ?>
                             </div>
-                                    <!-- BURAYI KURCALIYORUM
-                                <p style="color: black; font-weight: 700;">Type: Complaint<br>
-                                Student Name: Tolga Küçükaşçı<br>
-                                Student ID: 2022555451</p>
-                                </div> -->
-
                                 <div class="col-md-6"></div>
                                 <div class="col-md-3 mx-auto" p-0>
                                 <p style="float: right; color: black; font-weight: 700;">

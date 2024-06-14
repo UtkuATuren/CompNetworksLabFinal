@@ -91,13 +91,11 @@ td{
     border-spacing:0 20px; 
 }
 
-/* Define the default color for all the table rows */
 .hoverTable tr{
     background: white;
     color: black;  
 }
 
-/*table hover*/
 .hoverTable tr:hover {
       background-color: #00421c;
       cursor: pointer;
@@ -113,12 +111,12 @@ td{
     display: flex;
     margin: auto;
     margin-top: 3vh;
-    width: 25vh; /* Adjust width and height as needed */
+    width: 25vh; 
     height: 25vh;
-    border-radius: 50%; /* Makes the container circular */
+    border-radius: 50%; 
     background-image: url('https://ankara.tfo.k12.tr/wp-content/uploads/2022/06/Ataturk.jpg');
-    background-size: cover; /* Cover the entire container with the background image */
-    background-position: center; /* Center the background image */
+    background-size: cover; 
+    background-position: center; 
   }
 
  textarea {

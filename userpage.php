@@ -1,8 +1,6 @@
 <?php
-// Start the session at the very beginning of the file
 session_start();
 
-// Include your connection file
 include('connection.php');
 include('checkuser.php');
 checkUser();
